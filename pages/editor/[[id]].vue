@@ -39,7 +39,7 @@
 
           <div class="pt-3">
             <div>
-              <v-label>Instructions (JSON format)</v-label>
+              <v-label class="mb-1">Instructions (as a JSON array)</v-label>
             </div>
             <div>
               <codemirror
@@ -140,6 +140,8 @@ const submitInstructionSet = async () => {
     method: 'POST',
     body: JSON.stringify(formData)
   })
-  await router.push('/')
+  await router.push({
+    path: '/'
+  })
 };
 </script>

@@ -2,7 +2,7 @@
   <div class="container mx-auto p-4 h-screen">
     <v-row class="mb-1">
       <v-col cols="12">
-        <h5 class="text-2xl font-semibold">Pos Instruction Sets</h5>
+        <h5 class="text-2xl font-light">Pos Instruction Sets</h5>
       </v-col>
     </v-row>
 
@@ -54,6 +54,8 @@
                 <v-chip
                     v-for="tag in instSet.tags"
                     :key="tag"
+                    class="mr-1"
+                    color="primary"
                 >
                   {{ tag }}
                 </v-chip>

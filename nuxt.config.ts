@@ -4,6 +4,9 @@ import vuetify, { transformAssetUrls } from 'vite-plugin-vuetify'
 
 export default defineNuxtConfig({
   devtools: { enabled: true },
+  devServer: {
+    port: 4000
+  },
   build: {
     transpile: ['vuetify'],
   },
@@ -43,7 +46,8 @@ export default defineNuxtConfig({
       }
     },
     routeRules: {
-      '/apis/**': { proxy: '/api/**' }
+      '/api/enactor/v2/orders/importOrder/**': { proxy: '/api/enactor/order/import/**' },
+      '/apis/enactor/v2/orders/importOrder/**': { proxy: '/api/enactor/order/import/**' }
     }
   }
 })
