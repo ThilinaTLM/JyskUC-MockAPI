@@ -1,6 +1,6 @@
 <template>
   <v-container>
-    <v-form @submit="submitInstructionSet">
+    <v-form @submit.prevent="submitInstructionSet">
       <v-card
         title="Create Instruction Set"
         subtitle="Create a new instruction set"
