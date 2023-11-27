@@ -15,4 +15,12 @@ export default defineNuxtConfig({
       autoprefixer: {},
     },
   },
+  nitro: {
+    storage: {
+      inst: {
+        driver: 'fs',
+        base: './data/inst'
+      }
+    }
+  }
 })
