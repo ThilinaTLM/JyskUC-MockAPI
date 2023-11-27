@@ -16,7 +16,17 @@
     "postcss": "^8.4.31",
     "sass": "^1.69.5",
     "tailwindcss": "^3.3.5",
+    "vite-plugin-vuetify": "^1.0.2",
     "vue": "^3.3.8",
-    "vue-router": "^4.2.5"
+    "vue-router": "^4.2.5",
+    "vuetify": "^3.4.3"
+  },
+  "dependencies": {
+    "@codemirror/lang-json": "^6.0.1",
+    "@mdi/font": "^7.3.67",
+    "codemirror": "^6.0.1",
+    "fuse.js": "^7.0.0",
+    "json-format": "^1.0.1",
+    "vue-codemirror": "^6.1.1"
   }
 }
