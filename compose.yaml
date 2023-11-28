@@ -1,0 +1,23 @@
+version: '3.8'
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      PORT: 4000
+      HOST: 0.0.0.0
+    volumes:
+      - .output-data:/usr/src/app/.output/data
+    ports:
+      - "4000:4000"
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
+
+volumes:
+  .output-data:
