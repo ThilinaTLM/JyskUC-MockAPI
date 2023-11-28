@@ -1,1 +1,0 @@
-{"id":"0001","name":"For ticket PLAT-12226","description":"Add two items to the basket using setItem and set delivery options","tags":["PT12226","setItem"],"instructions":[{"action":"setItem","itemId":"1","quantity":1,"ucOrder":"12345","ucLineItem":1}],"created":"2023-11-28T06:47:05.366Z","modified":"2023-11-28T06:47:05.366Z"}

@@ -35,13 +35,6 @@
             <v-card-title class="headline">
               <v-row>
                 <v-col class="py-4">ID: {{ instSet.id.toUpperCase() }}</v-col>
-                <v-col class="text-right" fixed>
-                  <v-btn variant="outlined" @click="deleteInstSet(instSet.id)" class="ml-3" icon="mdi-copy" color="red" size="small" />
-                  <NuxtLink :to="`/editor/${instSet.id}`">
-                    <v-btn variant="outlined" class="ml-3" icon="mdi-file-edit" size="small"></v-btn>
-                  </NuxtLink>
-                  <v-btn variant="outlined" @click="deleteInstSet(instSet.id)" class="ml-3" icon="mdi-delete" color="red" size="small" />
-                </v-col>
               </v-row>
             </v-card-title>
 
@@ -65,6 +58,18 @@
                 </p>
               </v-row>
             </v-card-text>
+
+            <v-card-actions>
+              <v-row>
+                <v-col fixed>
+                  <v-btn variant="outlined" @click="copyInstSet(instSet.id)" class="ml-3" icon="mdi-content-copy" color="green" size="small" />
+                  <NuxtLink :to="`/editor/${instSet.id}`">
+                    <v-btn variant="outlined" class="ml-3" icon="mdi-file-edit" size="small"></v-btn>
+                  </NuxtLink>
+                  <v-btn variant="outlined" @click="deleteInstSet(instSet.id)" class="ml-3" icon="mdi-delete" color="red" size="small" />
+                </v-col>
+              </v-row>
+            </v-card-actions>
           </v-card>
         </v-col>
 
@@ -86,6 +91,9 @@ import {computed} from 'vue';
 import type {InstructionSet} from "~/models/instruction";
 import JsonFormat from 'json-format'
 import Fuse from "fuse.js";
+import {generateRandomID} from "~/utils/generateId";
+
+const router = useRouter()
 
 // States
 const rawInstSets = ref([] as InstructionSet[])
@@ -120,6 +128,17 @@ async function deleteInstSet(id: string) {
   await $fetch(`/api/inst-set/${id}`, {method: 'DELETE'})
   await fetchInstSets()
 }
+
+async function copyInstSet(id: string) {
+  const randomId = generateRandomID()
+  await router.push({
+    path: `/editor/${randomId}`,
+    query: {
+      copiedFrom: id
+    }
+  })
+}
+
 </script>
 
 

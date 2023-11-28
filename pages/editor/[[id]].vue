@@ -114,13 +114,22 @@ const rules = {
 
 const prefetchInstructionSet = async () => {
   const { id } = router.currentRoute.value.params;
+  const { copiedFrom } = router.currentRoute.value.query;
   if (!id) return;
-  const instSet: InstructionSet = await $fetch(`/api/inst-set/${id}`);
-  instructionSet.rawId = instSet.id;
-  instructionSet.name = instSet.name;
-  instructionSet.description = instSet.description;
-  instructionSet.tags = instSet.tags;
-  instructionSet.instructions = jsonFormat(instSet.instructions);
+  console.log("COPIED FROM", copiedFrom)
+
+  if (copiedFrom) {
+    const instSet: InstructionSet = await $fetch(`/api/inst-set/${copiedFrom}`);
+    instructionSet.rawId = id as string;
+    instructionSet.tags = instSet.tags;
+    instructionSet.instructions = jsonFormat(instSet.instructions);
+    return;
+  } else {
+    const instSet: InstructionSet = await $fetch(`/api/inst-set/${id}`);
+    instructionSet.rawId = instSet.id;
+    instructionSet.tags = instSet.tags;
+    instructionSet.instructions = jsonFormat(instSet.instructions);
+  }
 };
 await prefetchInstructionSet()
 
