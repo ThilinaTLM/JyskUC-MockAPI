@@ -15,6 +15,7 @@ WORKDIR /usr/src/app
 COPY --from=build /usr/src/app/.output .output
 COPY --from=build /usr/src/app/package.json .
 COPY --from=build /usr/src/app/bun.lockb .
+COPY --from=build /usr/src/app/data data
 
 ENV NODE_ENV=productiondocke
 ENV PORT=4000
