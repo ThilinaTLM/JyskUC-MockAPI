@@ -1,16 +1,20 @@
 <template>
-  <div class="container mx-auto p-4 h-screen">
-    <v-row class="mb-1">
-      <v-col cols="12">
-        <h5 class="text-2xl font-light">Pos Instruction Sets</h5>
-      </v-col>
-    </v-row>
+  <div class="container mx-auto p-4" style="min-height: calc(100% - 200px)">
+
 
     <v-row class="mb-1">
-      <v-col cols="12" class="text-right">
-        <v-spacer></v-spacer>
-        <NuxtLink :to="`/editor`">
-          <v-btn color="primary" variant="elevated">
+      <v-col cols="10">
+        <v-text-field
+            v-model="searchQuery"
+            prepend-inner-icon="mdi-magnify"
+            label="Search for instruction sets"
+            variant="outlined"
+            hide-details
+        ></v-text-field>
+      </v-col>
+      <v-col cols="2">
+        <NuxtLink to="/editor">
+          <v-btn color="primary" variant="outlined" stacked prepend-icon="mdi-book-plus" density="comfortable" class="w-full">
             Create New
           </v-btn>
         </NuxtLink>
@@ -18,61 +22,53 @@
     </v-row>
 
     <!-- Search Box -->
-    <v-text-field
-        v-model="state.search"
-        append-inner-icon="mdi-magnify"
-        label="Search for instruction sets"
-        single-line
-        hide-details
-        variant="outlined"
-    ></v-text-field>
+
 
     <!-- Product Grid -->
-    <div>
+    <div class="mt-4">
       <v-row>
         <v-col
             cols="12"
             sm="6"
             md="4"
             lg="3"
-            v-for="instSet in filteredInstSets"
+            v-for="instSet in instSets"
             :key="instSet.id"
-            v-if="filteredInstSets.length > 0"
+            v-if="instSets.length > 0"
         >
-          <v-card class="elevation-2 my-5 mx-1" outlined>
-            <v-card-title class="headline bg-blue">
-              {{ instSet.id.toUpperCase() }}
-            </v-card-title>
-            <v-card-subtitle class="grey--text text--darken-1 my-3">
-              {{ instSet.name }}
-            </v-card-subtitle>
-            <v-card-text class="px-7">
-              <v-row class="mb-4">
-                {{ instSet.description }}
-              </v-row>
+          <v-card class="elevation-0 pa-2" outlined variant="outlined">
+            <v-card-title class="headline">
               <v-row>
+                <v-col class="py-4">ID: {{ instSet.id.toUpperCase() }}</v-col>
+                <v-col class="text-right" fixed>
+                  <NuxtLink :to="`/editor/${instSet.id}`">
+                    <v-btn variant="outlined" class="ml-3" icon="mdi-file-edit" size="small"></v-btn>
+                  </NuxtLink>
+                  <v-btn variant="outlined" @click="deleteInstSet(instSet.id)" class="ml-3" icon="mdi-delete" color="red" size="small" />
+                </v-col>
+              </v-row>
+            </v-card-title>
+
+            <v-card-text class="px-7 mb-3 mt-6">
+              <v-row class="mb-3">
                 <v-chip
                     v-for="tag in instSet.tags"
                     :key="tag"
-                    class="mr-1"
+                    class="mr-1 px-3"
                     color="primary"
+                    variant="tonal"
+                    density="comfortable"
+                    size="sm"
                 >
                   {{ tag }}
                 </v-chip>
               </v-row>
+              <v-row class="h-[200px]">
+                <p class="line-clamp-5">
+                  {{ JsonFormat(instSet.instructions) }}
+                </p>
+              </v-row>
             </v-card-text>
-
-            <v-card-actions>
-                  <v-divider></v-divider>
-                  <NuxtLink :to="`/editor/${instSet.id}`">
-                    <v-btn variant="outlined" class="ml-3">
-                      Edit
-                    </v-btn>
-                  </NuxtLink>
-                  <v-btn variant="outlined" @click="deleteInstSet(instSet.id)" class="ml-3">
-                    Delete
-                  </v-btn>
-            </v-card-actions>
           </v-card>
         </v-col>
 
@@ -86,47 +82,42 @@
         </v-col>
       </v-row>
     </div>
-
-    <!-- Pagination -->
-    <v-pagination
-        v-model="state.page"
-        :length="totalPages"
-        circle
-    ></v-pagination>
   </div>
 </template>
 
 <script setup lang="ts">
-import {computed, reactive} from 'vue';
+import {computed} from 'vue';
 import type {InstructionSet} from "~/models/instruction";
+import JsonFormat from 'json-format'
+import Fuse from "fuse.js";
 
-// Define a reactive state
-const state = reactive({
-  search: '',
-  page: 1,
-  pageSize: 8,
-  instSets: [] as InstructionSet[],
-});
+// States
+const rawInstSets = ref([] as InstructionSet[])
+const fuseIndex = computed(() => {
+  return new Fuse(rawInstSets.value || [], {
+    includeScore: true,
+    keys: ['id', 'tags'],
+    isCaseSensitive: false,
+    findAllMatches: true,
+  })
+})
+const searchQuery = ref('')
+const instSets = computed(() => {
+  if (searchQuery.value.trim() === '') {
+    return rawInstSets.value as unknown as InstructionSet[]
+  }
+  return fuseIndex.value.search(searchQuery.value).map(result => result.item) as InstructionSet[]
+})
+
+// On Start
 await fetchInstSets()
 
-// Computed property for filtered products
-const filteredInstSets = computed(() => {
-  const start = (state.page - 1) * state.pageSize;
-  const end = start + state.pageSize;
-  return state.instSets
-      .filter(product =>
-          product.name.toLowerCase().includes(state.search.toLowerCase())
-      )
-      .slice(start, end);
-});
 
-const totalPages = computed(() => {
-  return Math.ceil(state.instSets.length / state.pageSize);
-});
-
-
+// Functions
 async function fetchInstSets() {
-  state.instSets = await $fetch('/api/inst-set')
+  const data = await $fetch('/api/inst-set')
+  console.log("ALL INSTRUCTION SETS", data.length)
+  rawInstSets.value = data
 }
 
 async function deleteInstSet(id: string) {

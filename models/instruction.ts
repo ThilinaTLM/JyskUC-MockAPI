@@ -5,10 +5,6 @@ export interface Instruction {
 
 export interface InstructionSet {
     id: string
-    name: string
-    description: string
     tags: string[]
-    created: Date
-    modified: Date
     instructions: Instruction[]
 }

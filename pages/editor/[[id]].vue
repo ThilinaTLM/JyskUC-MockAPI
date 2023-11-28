@@ -1,55 +1,40 @@
 <template>
   <v-container>
-    <v-form @submit.prevent="submitInstructionSet">
+    <v-form @submit.prevent="submitInstructionSet" >
       <v-card
         title="Create Instruction Set"
         subtitle="Create a new instruction set"
         elevation="0"
       >
         <v-card-text>
-          <v-text-field
-              v-model="id"
-              label="ID"
-              variant="outlined"
-              density="compact"
-          ></v-text-field>
 
-          <v-text-field
-              v-model="instructionSet.name"
-              label="Name"
-              variant="outlined"
-              density="comfortable"
-          ></v-text-field>
-
-          <v-textarea
-              v-model="instructionSet.description"
-              label="Description"
-              variant="outlined"
-              density="comfortable"
-          ></v-textarea>
-
-          <v-combobox
-              v-model="instructionSet.tags"
-              chips
-              density="comfortable"
-              label="Tags (Press enter to add a tag)"
-              multiple
-              variant="outlined"
-          ></v-combobox>
-
-          <div class="pt-3">
-            <div>
-              <v-label class="mb-1">Instructions (as a JSON array)</v-label>
-            </div>
+          <v-row>
+            <v-col cols="4">
+              <v-text-field
+                  v-model="id"
+                  label="ID"
+                  variant="outlined"
+                  :rules="rules.id"
+              ></v-text-field>
+            </v-col>
+            <v-col cols="8">
+              <v-combobox
+                  v-model="instructionSet.tags"
+                  chips
+                  label="Tags"
+                  placeholder="JYSK-2344"
+                  hint="Write and press enter to add a tag"
+                  multiple
+                  variant="outlined"
+              ></v-combobox>
+            </v-col>
+          </v-row>
+          <div class="pt-1">
             <div>
               <codemirror
                   v-model="instructionSet.instructions"
                   placeholder="List of instructions in JSON format"
-                  :style="{
-                height: '500px',
-                border: '1px solid #ccc',
-                borderRadius: '4px'
-              }"
+                  style="height: 550px; border: 1px solid #ccc; border-radius: 4px"
                   :autofocus="true"
                   :indent-with-tab="true"
                   :tab-size="2"
@@ -58,26 +43,34 @@
               />
             </div>
           </div>
+          <v-divider color="primary" class="my-2"></v-divider>
         </v-card-text>
-        <v-card-actions class="mb-4">
+
+        <v-card-actions class="mb-4 px-4">
+          <v-btn
+              color="error"
+              @click="() => clear()"
+              variant="outlined"
+              prepend-icon="mdi-close"
+              density="default"
+              class="w-[120px]"
+          >
+            Clear
+          </v-btn>
           <v-spacer></v-spacer>
           <v-btn
               color="primary"
-              @click="() => router.back()"
-              variant="elevated"
-              class="mr-2 w-[150px]"
-          >
-            Back
-          </v-btn>
-          <v-btn
-              color="primary"
               type="submit"
-              variant="elevated"
-              class="mr-2 w-[150px]"
+              variant="outlined"
+              prepend-icon="mdi-content-save"
+              density="default"
+              class="w-[120px]"
+              :disabled="instructionSet.rawId.trim() === ''"
           >
             Save
           </v-btn>
         </v-card-actions>
+
       </v-card>
     </v-form>
   </v-container>
@@ -112,10 +105,16 @@ const id = computed({
   }
 });
 
+// validation rules
+const rules = {
+  id: [
+      value => !!value || 'Required.',
+  ]
+}
+
 const prefetchInstructionSet = async () => {
   const { id } = router.currentRoute.value.params;
   if (!id) return;
-
   const instSet: InstructionSet = await $fetch(`/api/inst-set/${id}`);
   instructionSet.rawId = instSet.id;
   instructionSet.name = instSet.name;
@@ -124,6 +123,16 @@ const prefetchInstructionSet = async () => {
   instructionSet.instructions = jsonFormat(instSet.instructions);
 };
 await prefetchInstructionSet()
+
+
+
+const clear = () => {
+  instructionSet.rawId = "";
+  instructionSet.name = "";
+  instructionSet.description = "";
+  instructionSet.tags = null;
+  instructionSet.instructions = `[\n\t\n]`;
+};
 
 const submitInstructionSet = async () => {
   const formData = {
@@ -135,6 +144,7 @@ const submitInstructionSet = async () => {
     created: new Date().toISOString(),
     modified: new Date().toISOString()
   };
+
   console.log("FORM-DATA", formData);
   await $fetch('/api/inst-set', {
     method: 'POST',
