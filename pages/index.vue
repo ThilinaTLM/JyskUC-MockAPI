@@ -130,9 +130,8 @@ async function deleteInstSet(id: string) {
 }
 
 async function copyInstSet(id: string) {
-  const randomId = generateRandomID()
   await router.push({
-    path: `/editor/${randomId}`,
+    path: `/editor`,
     query: {
       copiedFrom: id
     }

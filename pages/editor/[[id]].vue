@@ -12,7 +12,7 @@
             <v-col cols="4">
               <v-text-field
                   v-model="id"
-                  label="ID"
+                  :label="idIsGenerated? 'Generated ID': 'ID'"
                   variant="outlined"
                   :rules="rules.id"
               ></v-text-field>
@@ -78,9 +78,10 @@
 
 <script setup lang="ts">
 import {Codemirror} from "vue-codemirror";
-import { json } from '@codemirror/lang-json'
+import {json} from '@codemirror/lang-json'
 import type {InstructionSet} from "~/models/instruction";
 import jsonFormat from 'json-format'
+import {generateRandomID} from "~/utils/generateId";
 
 const extensions = [json()]
 const view = shallowRef()
@@ -89,6 +90,8 @@ const handleReady = (payload) => {
 }
 
 const router = useRouter()
+
+const idIsGenerated = ref(false)
 
 const instructionSet = reactive({
   rawId: "",
@@ -113,18 +116,18 @@ const rules = {
 }
 
 const prefetchInstructionSet = async () => {
-  const { id } = router.currentRoute.value.params;
   const { copiedFrom } = router.currentRoute.value.query;
-  if (!id) return;
-  console.log("COPIED FROM", copiedFrom)
-
   if (copiedFrom) {
     const instSet: InstructionSet = await $fetch(`/api/inst-set/${copiedFrom}`);
-    instructionSet.rawId = id as string;
+    instructionSet.rawId = generateRandomID();
     instructionSet.tags = instSet.tags;
     instructionSet.instructions = jsonFormat(instSet.instructions);
+    idIsGenerated.value = true
     return;
   } else {
+    const { id } = router.currentRoute.value.params;
+    if (!id) return;
+
     const instSet: InstructionSet = await $fetch(`/api/inst-set/${id}`);
     instructionSet.rawId = instSet.id;
     instructionSet.tags = instSet.tags;
