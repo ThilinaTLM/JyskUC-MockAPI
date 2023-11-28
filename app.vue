@@ -1,6 +1,8 @@
 <script setup lang="ts">
-  const router = useRouter()
-
+const router = useRouter()
+useHead({
+  title: 'JYSK UC Mock API'
+})
 </script>
 
 <template>
@@ -14,15 +16,15 @@
             icon="mdi-arrow-left"
             density="comfortable"
         />
-          <v-toolbar-title>
+        <v-toolbar-title>
 
           <NuxtLink to="/">
             <h2 class="font-weight-medium text-primary">JYSK UC Mock API</h2>
           </NuxtLink>
-          </v-toolbar-title>
+        </v-toolbar-title>
       </v-app-bar>
       <v-main>
-        <NuxtPage />
+        <NuxtPage/>
       </v-main>
     </v-app>
   </NuxtLayout>
@@ -30,8 +32,8 @@
 
 v
 <style scoped>
-  .v-application {
-    background-color: #ffffff;
-  }
+.v-application {
+  background-color: #ffffff;
+}
 </style>
 
