@@ -1,7 +1,5 @@
 <template>
   <div class="container mx-auto p-4" style="min-height: calc(100% - 200px)">
-
-
     <v-row class="mb-1">
       <v-col cols="10">
         <v-text-field
@@ -21,9 +19,6 @@
       </v-col>
     </v-row>
 
-    <!-- Search Box -->
-
-
     <!-- Product Grid -->
     <div class="mt-4">
       <v-row>
@@ -41,6 +36,7 @@
               <v-row>
                 <v-col class="py-4">ID: {{ instSet.id.toUpperCase() }}</v-col>
                 <v-col class="text-right" fixed>
+                  <v-btn variant="outlined" @click="deleteInstSet(instSet.id)" class="ml-3" icon="mdi-copy" color="red" size="small" />
                   <NuxtLink :to="`/editor/${instSet.id}`">
                     <v-btn variant="outlined" class="ml-3" icon="mdi-file-edit" size="small"></v-btn>
                   </NuxtLink>
