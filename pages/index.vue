@@ -129,7 +129,14 @@ const fuseIndex = computed(() => {
 const searchQuery = ref('')
 const instSets = computed(() => {
   if (searchQuery.value.trim() === '') {
-    return rawInstSets.value as unknown as InstructionSet[]
+    const _set = rawInstSets.value as unknown as InstructionSet[]
+    _set.sort((a, b) => {
+      if (!a.modified || !b.modified) return 0
+      if (a.modified > b.modified) return -1
+      if (a.modified < b.modified) return 1
+      return 0
+    })
+    return _set
   }
   return fuseIndex.value.search(searchQuery.value).map(result => result.item) as InstructionSet[]
 })

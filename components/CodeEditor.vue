@@ -10,7 +10,7 @@ const sourceCode = computed({
   get() {
     return props.code
   },
-  set(value) {
+  set(sourceCode) {
     emit('update:code', sourceCode)
   }
 })
@@ -18,9 +18,9 @@ const sourceCode = computed({
 const extensions = [
   basicSetup,
   json(),
-  EditorView.updateListener.of(update => {
-    console.log("Update!", update)
-  })
+  // EditorView.updateListener.of(update => {
+  //   console.log("Update!", update)
+  // })
 ]
 const view = shallowRef()
 const handleReady = (payload) => {

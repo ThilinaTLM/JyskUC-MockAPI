@@ -7,4 +7,5 @@ export interface InstructionSet {
     id: string
     tags: string[]
     instructions: Instruction[]
+    modified: Date
 }

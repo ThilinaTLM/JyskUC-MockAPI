@@ -21,12 +21,12 @@
             <v-col cols="8">
               <v-combobox
                   v-model="instructionSet.tags"
-                  chips
                   label="Tags"
                   placeholder="JYSK-2344"
                   hint="Write and press enter to add a tag"
-                  multiple
                   variant="outlined"
+                  chips
+                  multiple
               ></v-combobox>
             </v-col>
           </v-row>
@@ -143,8 +143,6 @@ await prefetchInstructionSet()
 
 const clear = () => {
   instructionSet.rawId = "";
-  instructionSet.name = "";
-  instructionSet.description = "";
   instructionSet.tags = null;
   instructionSet.instructions = `[\n\t\n]`;
 };
@@ -152,18 +150,13 @@ const clear = () => {
 const submitInstructionSet = async () => {
   const formData = {
     id: id.value,
-    name: instructionSet.name,
-    description: instructionSet.description,
     tags: Object.values(instructionSet.tags || {}) || [],
     instructions: JSON.parse(instructionSet.instructions),
-    created: new Date().toISOString(),
-    modified: new Date().toISOString()
   };
-
   console.log("FORM-DATA", formData);
   await $fetch('/api/inst-set', {
     method: 'POST',
-    body: JSON.stringify(formData)
+    body: formData
   })
   await router.push({
     path: '/'

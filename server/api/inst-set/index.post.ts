@@ -13,6 +13,9 @@ export default defineEventHandler(async (event ) => {
         return
     }
 
+    // set modified date
+    form.modified = new Date()
+
     await useStorage("inst").setItem(form.id, form);
     return form
 })
