@@ -91,7 +91,6 @@ import {computed} from 'vue';
 import type {InstructionSet} from "~/models/instruction";
 import JsonFormat from 'json-format'
 import Fuse from "fuse.js";
-import {generateRandomID} from "~/utils/generateId";
 
 const router = useRouter()
 

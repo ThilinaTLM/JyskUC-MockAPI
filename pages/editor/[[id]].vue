@@ -15,6 +15,7 @@
                   :label="idIsGenerated? 'Generated ID': 'ID'"
                   variant="outlined"
                   :rules="rules.id"
+                  :prepend-inner-icon="idIsGenerated? 'mdi-new-box': 'mdi-lock'"
               ></v-text-field>
             </v-col>
             <v-col cols="8">
