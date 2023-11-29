@@ -5,6 +5,7 @@ export default defineEventHandler(async (event ) => {
     let id = getRouterParam(event, 'id')
     const form: any = await readBody(event)
 
+    console.log("FORM", form)
     if (!id) {
         id = form?.payload?.["orderUuid"]
     }
