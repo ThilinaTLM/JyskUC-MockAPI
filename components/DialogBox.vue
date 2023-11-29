@@ -47,10 +47,7 @@ defineExpose({
         <v-card-text>
           Are you sure?
         </v-card-text>
-
         <v-card-actions class="px-3">
-
-
           <v-btn color="error" variant="tonal" @click="closeDialog(true)">
             Yes
           </v-btn>
@@ -58,7 +55,6 @@ defineExpose({
           <v-btn color="success" variant="tonal" @click="closeDialog(false)">
             No
           </v-btn>
-
         </v-card-actions>
       </v-card>
     </template>
