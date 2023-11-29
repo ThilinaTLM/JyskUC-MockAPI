@@ -5,7 +5,7 @@
         <v-text-field
             v-model="searchQuery"
             prepend-inner-icon="mdi-magnify"
-            label="Search for instruction sets"
+            placeholder="Type here to filter..."
             variant="outlined"
             hide-details
         ></v-text-field>
@@ -19,15 +19,34 @@
       </v-col>
     </v-row>
 
+    <v-row>
+      <v-col class="flex justify-left items-center" cols="4">
+        <v-pagination
+            size="small"
+            v-model="pagination.page"
+            :length="pagination.totalPages"
+            color="primary"
+            @input="pagination.page = $event"
+            total-visible="3"
+            variant="outlined"
+        ></v-pagination>
+      </v-col>
+      <v-spacer></v-spacer>
+      <v-col cols="2" class="text-right text-sm py-6">
+        <p>Filtered Items: {{instSets.length}}</p>
+        <p>Total Items: {{rawInstSets.length}}</p>
+      </v-col>
+    </v-row>
+
     <!-- Product Grid -->
-    <div class="mt-4">
+    <div class="ma-3">
       <v-row>
         <v-col
             cols="12"
             sm="6"
             md="4"
             lg="3"
-            v-for="instSet in instSets"
+            v-for="instSet in pagedInstSets"
             :key="instSet.id"
             v-if="instSets.length > 0"
         >
@@ -104,7 +123,7 @@ const fuseIndex = computed(() => {
     includeScore: true,
     keys: ['id', 'tags'],
     isCaseSensitive: false,
-    findAllMatches: true,
+    findAllMatches: false,
   })
 })
 const searchQuery = ref('')
@@ -115,6 +134,26 @@ const instSets = computed(() => {
   return fuseIndex.value.search(searchQuery.value).map(result => result.item) as InstructionSet[]
 })
 const dialogBoxRef = ref<any>(null)
+const pagination = reactive({
+  page: 1,
+  totalPages: 1,
+  itemsPerPage: 12,
+})
+
+const pagedInstSets = computed(() => {
+  return instSets.value.slice((pagination.page - 1) * pagination.itemsPerPage, pagination.page * pagination.itemsPerPage)
+})
+
+watchEffect(() => {
+  pagination.totalPages = Math.ceil(instSets.value.length / pagination.itemsPerPage)
+  if (pagination.page > pagination.totalPages) {
+    if (pagination.totalPages === 0) {
+      pagination.page = 1
+    } else {
+      pagination.page = pagination.totalPages
+    }
+  }
+})
 
 // On Start
 await fetchInstSets()

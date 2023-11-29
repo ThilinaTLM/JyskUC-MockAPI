@@ -35,19 +35,19 @@
                 show-arrows
             >
               <v-slide-group-item
-                  v-for="n in 5"
-                  :key="n"
+                  v-for="(example, ind) in examples"
+                  :key="ind"
                   v-slot="{ isSelected, toggle }"
               >
                 <v-btn
                     class="px-3 ma-2"
                     rounded
                     size="small"
-                    @click="toggle"
+                    @click="appendToInstructions(example.instructions)"
                     variant="tonal"
                     color="primary"
                 >
-                  Options {{ n }}
+                  {{ example.name }}
                 </v-btn>
               </v-slide-group-item>
             </v-slide-group>
@@ -93,6 +93,7 @@
 import type {InstructionSet} from "~/models/instruction";
 import jsonFormat from 'json-format'
 import {generateRandomID} from "~/utils/generateId";
+import examples from '~/utils/examples'
 
 const router = useRouter()
 const idIsGenerated = ref(false)
@@ -167,5 +168,15 @@ const submitInstructionSet = async () => {
   await router.push({
     path: '/'
   })
+};
+
+const appendToInstructions = (newInst: any) => {
+  try {
+    const sourceInst = JSON.parse(instructionSet.instructions) as any[];
+    sourceInst.push(...newInst);
+    instructionSet.instructions = jsonFormat(sourceInst);
+  } catch (e) {
+    alert("Invalid JSON")
+  }
 };
 </script>
