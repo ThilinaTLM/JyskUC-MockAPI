@@ -1,10 +1,10 @@
 <template>
   <v-container>
-    <v-form @submit.prevent="submitInstructionSet" >
+    <v-form @submit.prevent="submitInstructionSet">
       <v-card
-        title="Create Instruction Set"
-        subtitle="Create a new instruction set"
-        elevation="0"
+          title="Create Instruction Set"
+          subtitle="Create a new instruction set"
+          elevation="0"
       >
         <v-card-text>
 
@@ -30,21 +30,33 @@
               ></v-combobox>
             </v-col>
           </v-row>
-          <div class="pt-1">
-            <div>
-              <codemirror
-                  v-model="instructionSet.instructions"
-                  placeholder="List of instructions in JSON format"
-                  style="height: 550px; border: 1px solid #ccc; border-radius: 4px"
-                  :autofocus="true"
-                  :indent-with-tab="true"
-                  :tab-size="2"
-                  :extensions="extensions"
-                  @ready="handleReady"
-              />
-            </div>
-          </div>
-          <v-divider color="primary" class="my-2"></v-divider>
+          <v-row>
+            <v-slide-group
+                show-arrows
+            >
+              <v-slide-group-item
+                  v-for="n in 5"
+                  :key="n"
+                  v-slot="{ isSelected, toggle }"
+              >
+                <v-btn
+                    class="px-3 ma-2"
+                    rounded
+                    size="small"
+                    @click="toggle"
+                    variant="tonal"
+                    color="primary"
+                >
+                  Options {{ n }}
+                </v-btn>
+              </v-slide-group-item>
+            </v-slide-group>
+          </v-row>
+          <v-row>
+            <v-col cols="12">
+              <CodeEditor v-model:code="instructionSet.instructions"/>
+            </v-col>
+          </v-row>
         </v-card-text>
 
         <v-card-actions class="mb-4 px-4">
@@ -78,22 +90,12 @@
 </template>
 
 <script setup lang="ts">
-import {Codemirror} from "vue-codemirror";
-import {json} from '@codemirror/lang-json'
 import type {InstructionSet} from "~/models/instruction";
 import jsonFormat from 'json-format'
 import {generateRandomID} from "~/utils/generateId";
 
-const extensions = [json()]
-const view = shallowRef()
-const handleReady = (payload) => {
-  view.value = payload.view
-}
-
 const router = useRouter()
-
 const idIsGenerated = ref(false)
-
 const instructionSet = reactive({
   rawId: "",
   name: "",
@@ -112,12 +114,12 @@ const id = computed({
 // validation rules
 const rules = {
   id: [
-      value => !!value || 'Required.',
+    value => !!value || 'Required.',
   ]
 }
 
 const prefetchInstructionSet = async () => {
-  const { copiedFrom } = router.currentRoute.value.query;
+  const {copiedFrom} = router.currentRoute.value.query;
   if (copiedFrom) {
     const instSet: InstructionSet = await $fetch(`/api/inst-set/${copiedFrom}`);
     instructionSet.rawId = generateRandomID();
@@ -126,7 +128,7 @@ const prefetchInstructionSet = async () => {
     idIsGenerated.value = true
     return;
   } else {
-    const { id } = router.currentRoute.value.params;
+    const {id} = router.currentRoute.value.params;
     if (!id) return;
 
     const instSet: InstructionSet = await $fetch(`/api/inst-set/${id}`);
@@ -136,7 +138,6 @@ const prefetchInstructionSet = async () => {
   }
 };
 await prefetchInstructionSet()
-
 
 
 const clear = () => {

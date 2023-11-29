@@ -84,6 +84,9 @@
       </v-row>
     </div>
   </div>
+
+  <DialogBox ref="dialogBoxRef" />
+
 </template>
 
 <script setup lang="ts">
@@ -111,6 +114,7 @@ const instSets = computed(() => {
   }
   return fuseIndex.value.search(searchQuery.value).map(result => result.item) as InstructionSet[]
 })
+const dialogBoxRef = ref<any>(null)
 
 // On Start
 await fetchInstSets()
@@ -124,8 +128,10 @@ async function fetchInstSets() {
 }
 
 async function deleteInstSet(id: string) {
-  await $fetch(`/api/inst-set/${id}`, {method: 'DELETE'})
-  await fetchInstSets()
+  if (await dialogBoxRef.value?.openDialog()) {
+    await $fetch(`/api/inst-set/${id}`, {method: 'DELETE'})
+    await fetchInstSets()
+  }
 }
 
 async function copyInstSet(id: string) {
