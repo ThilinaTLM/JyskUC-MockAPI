@@ -16,6 +16,7 @@ COPY --from=build /usr/src/app/.output .output
 COPY --from=build /usr/src/app/package.json .
 COPY --from=build /usr/src/app/bun.lockb .
 
+ENV MONGO_URL="mongodb://mongo:27017/"
 ENV NODE_ENV=productiondocke
 ENV PORT=4000
 ENV HOST=0.0.0.0

@@ -2,7 +2,7 @@ import mongoose, {ConnectOptions} from "mongoose";
 import {InsertOneResult, MongoClient} from "mongodb";
 import type {InstructionSet} from "~/mongo/model";
 
-const MONGO_URL = "mongodb+srv://root:root@jyskuc-mockapi.i3rm8gs.mongodb.net/?retryWrites=true&w=majority"
+const MONGO_URL = process.env.MONGO_URL || "mongodb://localhost:27017";
 const DB_NAME = "inst-set";
 const COLLECTION_NAME = "inst-set";
 
