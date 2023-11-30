@@ -30,6 +30,8 @@
     "codemirror": "^6.0.1",
     "fuse.js": "^7.0.0",
     "json-format": "^1.0.1",
+    "mongodb": "^6.3.0",
+    "mongoose": "^8.0.2",
     "vue-codemirror": "^6.1.1"
   }
 }

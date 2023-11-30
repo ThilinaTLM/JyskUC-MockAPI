@@ -90,7 +90,7 @@
 </template>
 
 <script setup lang="ts">
-import type {InstructionSet} from "~/models/instruction";
+import type {InstructionSet} from "~/mongo/model";
 import jsonFormat from 'json-format'
 import {generateRandomID} from "~/utils/generateId";
 import examples from '~/utils/examples'

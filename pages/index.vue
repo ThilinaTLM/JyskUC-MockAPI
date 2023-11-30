@@ -110,7 +110,7 @@
 
 <script setup lang="ts">
 import {computed} from 'vue';
-import type {InstructionSet} from "~/models/instruction";
+import type {InstructionSet} from "~/mongo/model";
 import JsonFormat from 'json-format'
 import Fuse from "fuse.js";
 

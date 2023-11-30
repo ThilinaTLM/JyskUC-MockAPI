@@ -1,21 +1,18 @@
-import {InstructionSet} from "~/models/instruction";
+import {InstSetRepo, mongoClient} from "~/mongo/repo";
+import {InstructionSet} from "~/mongo/model";
 
+export default defineEventHandler(async (event) => {
+    const form = await readBody<InstructionSet>(event);
 
-export default defineEventHandler(async (event ) => {
-    const form = await readBody<InstructionSet>(event)
-    if (!form) {
-        setResponseStatus(event, 400)
-        return
+    // Check if the form is valid
+    if (!form || !form.id) {
+        setResponseStatus(event, 400);
+        return { error: "Invalid input" };
     }
 
-    if (!form.id) {
-        setResponseStatus(event, 400)
-        return
-    }
+    // Set the modified date
+    form.modified = new Date();
 
-    // set modified date
-    form.modified = new Date()
-
-    await useStorage("inst").setItem(form.id, form);
-    return form
-})
+    setResponseStatus(event, 200);
+    return await InstSetRepo.save(form)
+});

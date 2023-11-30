@@ -1,4 +1,5 @@
-import {InstructionSet} from "~/models/instruction";
+import {InstructionSet} from "~/mongo/model";
+import {InstSetRepo} from "~/mongo/repo";
 
 export default defineEventHandler(async (event ) => {
     const id = getRouterParam(event, 'id')
@@ -7,14 +8,13 @@ export default defineEventHandler(async (event ) => {
         return
     }
 
-    const instDb = await useStorage("inst")
-    const instSet = await instDb.getItem<InstructionSet>(id)
+    const instSet = await InstSetRepo.findById(id)
     if (!instSet) {
         setResponseStatus(event, 404)
         return
     }
 
-    await instDb.removeItem(id)
+    await InstSetRepo.deleteById(id)
     setResponseStatus(event, 200)
     return
 })
