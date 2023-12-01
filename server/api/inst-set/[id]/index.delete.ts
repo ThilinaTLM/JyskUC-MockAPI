@@ -1,4 +1,3 @@
-import {InstructionSet} from "~/mongo/model";
 import {InstSetRepo} from "~/mongo/repo";
 
 export default defineEventHandler(async (event ) => {
@@ -8,13 +7,13 @@ export default defineEventHandler(async (event ) => {
         return
     }
 
-    const instSet = await InstSetRepo.findById(id)
+    const instSet = await InstSetRepo.getInstance().findById(id)
     if (!instSet) {
         setResponseStatus(event, 404)
         return
     }
 
-    await InstSetRepo.deleteById(id)
+    await InstSetRepo.getInstance().deleteById(id)
     setResponseStatus(event, 200)
     return
 })

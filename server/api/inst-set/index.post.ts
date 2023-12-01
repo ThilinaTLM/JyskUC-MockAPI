@@ -1,4 +1,4 @@
-import {InstSetRepo, mongoClient} from "~/mongo/repo";
+import {InstSetRepo} from "~/mongo/repo";
 import {InstructionSet} from "~/mongo/model";
 
 export default defineEventHandler(async (event) => {
@@ -14,5 +14,5 @@ export default defineEventHandler(async (event) => {
     form.modified = new Date();
 
     setResponseStatus(event, 200);
-    return await InstSetRepo.save(form)
+    return await InstSetRepo.getInstance().save(form)
 });
