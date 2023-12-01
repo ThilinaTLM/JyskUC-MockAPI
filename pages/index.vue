@@ -50,46 +50,11 @@
             :key="instSet.id"
             v-if="instSets.length > 0"
         >
-          <v-card class="elevation-0 pa-2" outlined variant="outlined">
-            <v-card-title class="headline">
-              <v-row>
-                <v-col class="py-4">ID: {{ instSet.id.toUpperCase() }}</v-col>
-              </v-row>
-            </v-card-title>
-
-            <v-card-text class="px-7 mb-3 mt-6">
-              <v-row class="mb-3">
-                <v-chip
-                    v-for="tag in instSet.tags"
-                    :key="tag"
-                    class="mr-1 px-3"
-                    color="primary"
-                    variant="tonal"
-                    density="comfortable"
-                    size="sm"
-                >
-                  {{ tag }}
-                </v-chip>
-              </v-row>
-              <v-row class="h-[200px]">
-                <p class="line-clamp-5">
-                  {{ JsonFormat(instSet.instructions) }}
-                </p>
-              </v-row>
-            </v-card-text>
-
-            <v-card-actions>
-              <v-row>
-                <v-col fixed>
-                  <v-btn variant="outlined" @click="copyInstSet(instSet.id)" class="ml-3" icon="mdi-content-copy" color="green" size="small" />
-                  <NuxtLink :to="`/editor/${instSet.id}`">
-                    <v-btn variant="outlined" class="ml-3" icon="mdi-file-edit" size="small"></v-btn>
-                  </NuxtLink>
-                  <v-btn variant="outlined" @click="deleteInstSet(instSet.id)" class="ml-3" icon="mdi-delete" color="red" size="small" />
-                </v-col>
-              </v-row>
-            </v-card-actions>
-          </v-card>
+          <InstSetCard
+            :inst-set="instSet"
+            @copyInstSet="copyInstSet"
+            @deleteInstSet="deleteInstSet"
+          />
         </v-col>
 
         <v-col v-else class="flex flex-col justify-center items-center w-full h-[500px]">
@@ -111,7 +76,6 @@
 <script setup lang="ts">
 import {computed} from 'vue';
 import type {InstructionSet} from "~/mongo/model";
-import JsonFormat from 'json-format'
 import Fuse from "fuse.js";
 
 const router = useRouter()
