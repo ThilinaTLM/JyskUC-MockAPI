@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import type {InstructionSet} from "~/mongo/model";
 import {summarizedInstructions} from "~/utils/summarize";
-import {jsonToHTML} from "../utils/json";
+import {jsonToHTML} from "~/utils/json";
+import jsonFormat from "json-format";
 
 const {instSet}: { instSet: InstructionSet } = defineProps({
   instSet: {
@@ -24,7 +25,7 @@ const emitDeleteInstSet = (id) => {
 
 const copyToClipboard = (text) => {
   navigator.clipboard.writeText(text).then(() => {
-    console.log("Text copied to clipboard");
+    console.log("Copied to clipboard");
     snackbar.value = true
   }).catch(err => {
     console.error('Could not copy text: ', err);
@@ -39,13 +40,21 @@ const copyToClipboard = (text) => {
     <div class="text-md break-words text-wrap font-weight-bold flex-0">
       <p>
         {{ instSet.id.toUpperCase() }}
-        <v-btn
-            class="inline-block"
-            icon="mdi-content-copy"
-            size="x-small"
-            variant="text"
-            @click="copyToClipboard(instSet.id)"
-        />
+        <v-tooltip
+          open-delay="1000"
+        >
+          <template v-slot:activator="{ props }">
+            <v-btn
+                v-bind="props"
+                class="inline-block"
+                icon="mdi-content-copy"
+                size="x-small"
+                variant="text"
+                @click="copyToClipboard(instSet.id)"
+            />
+          </template>
+          <span class="code" v-html="jsonToHTML(instSet.instructions)"></span>
+        </v-tooltip>
       </p>
     </div>
     <div class="flex-0 text-sm mt-3 mb-3">
@@ -67,10 +76,17 @@ const copyToClipboard = (text) => {
           <template v-slot:activator="{ props }">
             <div class="attribute font-weight-bold bg-green-accent-1 text-black d-block">
               {{ item['Action'] }}
-              <v-icon v-bind="props" class="cursor-pointer" size="xs">mdi-information-outline</v-icon>
+              <v-icon
+                  v-bind="props"
+                  @click="copyToClipboard(jsonFormat(item.Raw, { type: 'space', size: 4 }))"
+                  class="cursor-pointer"
+                  size="xs"
+              >
+                mdi-content-copy
+              </v-icon>
             </div>
           </template>
-          <span v-html="jsonToHTML(item.Raw)"></span>
+          <span class="code" v-html="jsonToHTML(item.Raw)"></span>
         </v-tooltip>
         <span v-if="item['ItemID']" class="attribute text-success">{{ item['ItemID'] }}</span>
         <span v-if="item['Quantity']" class="attribute text-warning">Quantity: {{ item['Quantity'] }}</span>
@@ -103,8 +119,10 @@ const copyToClipboard = (text) => {
       v-model="snackbar"
       :timeout="2000"
       variant="flat"
-      position="relative"
+      position="absolute"
+      location="bottom right"
   >
+    <v-icon left>mdi-check</v-icon>
     Copied to clipboard
   </v-snackbar>
 </template>
@@ -138,5 +156,11 @@ const copyToClipboard = (text) => {
 
 .scrollable::-webkit-scrollbar {
   display: none; /* For WebKit browsers */
+}
+
+.code {
+  font-family: 'Fira Code', monospace;
+  font-size: 8pt;
+  line-height: 1.0 !important;
 }
 </style>
