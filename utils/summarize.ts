@@ -17,7 +17,7 @@ export function summarizedInstructions(instructionsSet: any[]) {
                     Action: instructions.action,
                     Raw: instructions,
                     DeliveryType: instructions.type,
-                    Description: instructions.description,
+                    // Description: instructions.description,
                 });
                 break;
             case "addTenderItem":
@@ -34,7 +34,16 @@ export function summarizedInstructions(instructionsSet: any[]) {
                     Raw: instructions,
                     FirstName: instructions.firstName,
                     LastName: instructions.lastName,
-                    Email: instructions.customerAddress.email,
+                    Email: instructions?.customerAddress?.email,
+                });
+                break;
+            case "addCollectionItem":
+                summary.push({
+                    Action: instructions.action,
+                    Raw: instructions,
+                    ItemID: instructions.collectionProductId,
+                    Quantity: instructions.collectionQuantity,
+                    Price: instructions.price,
                 });
                 break;
             default:

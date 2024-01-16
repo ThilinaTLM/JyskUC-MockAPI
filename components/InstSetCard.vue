@@ -74,7 +74,7 @@ const copyToClipboard = (text) => {
       <div class="action-item" v-for="(item, index) in summarizedInstructions(instSet.instructions)" :key="index">
         <v-tooltip>
           <template v-slot:activator="{ props }">
-            <div class="attribute font-weight-bold bg-green-accent-1 text-black d-block">
+            <div class="attribute-action font-weight-bold text-black d-block">
               {{ item['Action'] }}
               <v-icon
                   v-bind="props"
@@ -88,9 +88,9 @@ const copyToClipboard = (text) => {
           </template>
           <span class="code" v-html="jsonToHTML(item.Raw)"></span>
         </v-tooltip>
-        <span v-if="item['ItemID']" class="attribute text-success">{{ item['ItemID'] }}</span>
-        <span v-if="item['Quantity']" class="attribute text-warning">Quantity: {{ item['Quantity'] }}</span>
-        <span v-if="item['Price']" class="attribute text-grey-darken-2">Price: {{ item['Price'] }}</span>
+        <span v-if="item['ItemID']" class="attribute text-success">PID:{{ item['ItemID'] }}</span>
+        <span v-if="item['Quantity']" class="attribute text-warning">Qt:{{ item['Quantity'] }}</span>
+        <span v-if="item['Price']" class="attribute text-grey-darken-2">{{ item['Price'] }}</span>
         <span v-if="item['DeliveryType']" class="attribute text-grey-darken-2">{{ item['DeliveryType'] }}</span>
         <span v-if="item['Description']" class="attribute text-grey-darken-2">{{ item['Description'] }}</span>
         <span v-if="item['TenderID']" class="attribute text-grey-darken-2">{{ item['TenderID'] }}</span>
@@ -136,26 +136,33 @@ const copyToClipboard = (text) => {
 
 .action-item {
   font-family: 'Fira Code', monospace;
-  font-size: 12px;
-  margin-bottom: 7px;
-  padding: 1px;
+  margin-bottom: 3px;
+  padding: 5px 1px;
+  border: 1px dashed #e2e8f0;
+  background-color: #fafafa;
+  border-radius: 3px;
 }
 
 .action-item .attribute {
   margin-right: 5px;
-  padding: 1px 3px;
-  border-radius: 3px;
+  padding: 0 3px;
+  font-size: 10px;
+}
+
+.action-item .attribute-action {
+  margin-right: 5px;
+  padding: 0 3px;
   font-size: 12px;
 }
 
 .scrollable {
   height: 200px;
   overflow: auto;
-  scrollbar-width: none; /* For Firefox */
+  scrollbar-width: none;
 }
 
 .scrollable::-webkit-scrollbar {
-  display: none; /* For WebKit browsers */
+  display: none;
 }
 
 .code {

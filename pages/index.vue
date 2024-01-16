@@ -113,7 +113,7 @@ async function copyInstSet(id: string) {
             :length="pagination.totalPages"
             color="primary"
             @input="pagination.page = $event"
-            total-visible="3"
+            total-visible="5"
             variant="outlined"
         ></v-pagination>
       </v-col>
@@ -132,8 +132,8 @@ async function copyInstSet(id: string) {
             sm="6"
             md="4"
             lg="3"
-            v-for="instSet in pagedInstSets"
-            :key="instSet.id"
+            v-for="(instSet, index) in pagedInstSets"
+            :key="index"
         >
           <InstSetCard
             :inst-set="instSet"
