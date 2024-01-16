@@ -1,8 +1,7 @@
 <script setup lang="ts">
 import type {InstructionSet} from "~/mongo/model";
 import {summarizedInstructions} from "~/utils/summarize";
-import jsonFormat from "json-format";
-import {json} from "@codemirror/lang-json";
+import {jsonToHTML} from "../utils/json";
 
 const {instSet}: { instSet: InstructionSet } = defineProps({
   instSet: {
@@ -31,39 +30,6 @@ const copyToClipboard = (text) => {
     console.error('Could not copy text: ', err);
   });
 }
-
-function scrollToBottom(event) {
-  if (!event.target) return;
-  const element = event.target;
-  const scrollPosition = element.scrollHeight - element.clientHeight;
-
-  if (element.scrollTop < scrollPosition) {
-    // Smooth scroll to bottom
-    element.scrollTo({
-      top: element.scrollHeight,
-      behavior: 'smooth'
-    });
-  }
-}
-
-function scrollToTop(event) {
-  if (!event.target) return;
-  const element = event.target;
-
-  if (element.scrollTop > 0) {
-    // Smooth scroll to top
-    element.scrollTo({
-      top: 0,
-      behavior: 'smooth'
-    });
-  }
-}
-
-const formattedInstructions = computed(() => {
-  return jsonFormat(instSet.instructions, {type: 'space', size: 2})
-      .replace(/ /g, '&nbsp;')
-      .replace(/\n/g, '<br>')
-})
 
 </script>
 
@@ -95,9 +61,17 @@ const formattedInstructions = computed(() => {
         {{ tag }}
       </v-chip>
     </div>
-    <div class="flex-grow-1 scrollable h-auto" @mouseout="scrollToBottom" @mouseleave="scrollToTop">
+    <div class="flex-grow-1 scrollable h-auto">
       <div class="action-item" v-for="(item, index) in summarizedInstructions(instSet.instructions)" :key="index">
-        <span class="attribute font-weight-bold bg-green-accent-1 text-black d-block">{{ item['Action'] }}</span>
+        <v-tooltip>
+          <template v-slot:activator="{ props }">
+            <div class="attribute font-weight-bold bg-green-accent-1 text-black d-block">
+              {{ item['Action'] }}
+              <v-icon v-bind="props" class="cursor-pointer" size="xs">mdi-information-outline</v-icon>
+            </div>
+          </template>
+          <span v-html="jsonToHTML(item.Raw)"></span>
+        </v-tooltip>
         <span v-if="item['ItemID']" class="attribute text-success">{{ item['ItemID'] }}</span>
         <span v-if="item['Quantity']" class="attribute text-warning">Quantity: {{ item['Quantity'] }}</span>
         <span v-if="item['Price']" class="attribute text-grey-darken-2">Price: {{ item['Price'] }}</span>
@@ -113,17 +87,13 @@ const formattedInstructions = computed(() => {
     <div class="flex-0 mt-3">
       <v-row>
         <v-col fixed>
-          <v-tooltip>
-            <template v-slot:activator="{ props }">
-              <v-btn v-bind="props" variant="outlined" class="mr-3" icon="mdi-code-json" color="info" size="small"/>
-            </template>
-            <span v-html="formattedInstructions"></span>
-          </v-tooltip>
           <NuxtLink :to="`/editor/${instSet.id}`" class="mr-3">
             <v-btn variant="outlined" icon="mdi-file-edit" size="small"></v-btn>
           </NuxtLink>
-          <v-btn variant="outlined" @click="emitCopyInstSet(instSet.id)" class="mr-3" icon="mdi-content-copy" color="green" size="small"/>
-          <v-btn variant="outlined" @click="emitDeleteInstSet(instSet.id)" class="mr-3" icon="mdi-delete" color="red" size="small"/>
+          <v-btn variant="outlined" @click="emitCopyInstSet(instSet.id)" class="mr-3" icon="mdi-content-copy"
+                 color="green" size="small"/>
+          <v-btn variant="outlined" @click="emitDeleteInstSet(instSet.id)" class="mr-3" icon="mdi-delete" color="red"
+                 size="small"/>
         </v-col>
       </v-row>
     </div>
@@ -157,7 +127,7 @@ const formattedInstructions = computed(() => {
   margin-right: 5px;
   padding: 1px 3px;
   border-radius: 3px;
-  font-size: 10px;
+  font-size: 12px;
 }
 
 .scrollable {

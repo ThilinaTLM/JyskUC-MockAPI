@@ -6,36 +6,41 @@ export function summarizedInstructions(instructionsSet: any[]) {
             case "setItem":
                 summary.push({
                     Action: instructions.action,
+                    Raw: instructions,
                     ItemID: instructions.itemId,
                     Quantity: instructions.quantity,
-                    Price: instructions.price
+                    Price: instructions.price,
                 });
                 break;
             case "setDeliveryOption":
                 summary.push({
                     Action: instructions.action,
+                    Raw: instructions,
                     DeliveryType: instructions.type,
-                    Description: instructions.description
+                    Description: instructions.description,
                 });
                 break;
             case "addTenderItem":
                 summary.push({
                     Action: instructions.action,
+                    Raw: instructions,
                     TenderID: instructions.tenderId,
-                    Amount: instructions.tenderAmount
+                    Amount: instructions.tenderAmount,
                 });
                 break;
             case "setCustomer":
                 summary.push({
                     Action: instructions.action,
+                    Raw: instructions,
                     FirstName: instructions.firstName,
                     LastName: instructions.lastName,
-                    Email: instructions.customerAddress.email
+                    Email: instructions.customerAddress.email,
                 });
                 break;
             default:
                 summary.push({
-                    Action: instructions.action
+                    Action: instructions.action,
+                    Raw: instructions,
                 });
         }
     })
