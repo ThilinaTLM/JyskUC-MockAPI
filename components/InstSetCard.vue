@@ -119,7 +119,7 @@ const copyToClipboard = (text) => {
       v-model="snackbar"
       :timeout="2000"
       variant="flat"
-      position="absolute"
+      position="relative"
       location="bottom right"
   >
     <v-icon left>mdi-check</v-icon>
