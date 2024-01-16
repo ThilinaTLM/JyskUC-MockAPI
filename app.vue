@@ -8,7 +8,7 @@ useHead({
 <template>
   <NuxtLayout>
     <v-app class="v-application">
-      <v-app-bar :elevation="0">
+      <v-app-bar :elevation="0" style="min-height: 64px">
         <v-btn
             color="primary"
             @click="() => router.back()"
