@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type {InstructionSet} from "~/mongo/model";
-import {summarizedInstructions} from "~/utils/summarize";
+import {summarizeInstructionSet} from "~/utils/instruction";
 import {jsonToHTML} from "~/utils/json";
 import jsonFormat from "json-format";
 
@@ -40,21 +40,13 @@ const copyToClipboard = (text) => {
     <div class="text-md break-words text-wrap font-weight-bold flex-0">
       <p>
         {{ instSet.id.toUpperCase() }}
-        <v-tooltip
-          open-delay="1000"
-        >
-          <template v-slot:activator="{ props }">
-            <v-btn
-                v-bind="props"
-                class="inline-block"
-                icon="mdi-content-copy"
-                size="x-small"
-                variant="text"
-                @click="copyToClipboard(instSet.id)"
-            />
-          </template>
-          <span class="code" v-html="jsonToHTML(instSet.instructions)"></span>
-        </v-tooltip>
+        <v-btn
+            class="inline-block"
+            icon="mdi-content-copy"
+            size="x-small"
+            variant="text"
+            @click="copyToClipboard(instSet.id)"
+        />
       </p>
     </div>
     <div class="flex-0 text-sm mt-3 mb-3">
@@ -71,14 +63,14 @@ const copyToClipboard = (text) => {
       </v-chip>
     </div>
     <div class="flex-grow-1 scrollable h-auto">
-      <div class="action-item" v-for="(item, index) in summarizedInstructions(instSet.instructions)" :key="index">
+      <div class="action-item" v-for="(item, index) in summarizeInstructionSet(instSet.instructions)" :key="index">
         <v-tooltip>
           <template v-slot:activator="{ props }">
             <div class="attribute-action font-weight-bold text-black d-block">
-              {{ item['Action'] }}
+              {{ item.action }}
               <v-icon
                   v-bind="props"
-                  @click="copyToClipboard(jsonFormat(item.Raw, { type: 'space', size: 4 }))"
+                  @click="copyToClipboard(jsonFormat(item.raw, { type: 'space', size: 4 }))"
                   class="cursor-pointer"
                   size="xs"
               >
@@ -86,18 +78,11 @@ const copyToClipboard = (text) => {
               </v-icon>
             </div>
           </template>
-          <span class="code" v-html="jsonToHTML(item.Raw)"></span>
+          <span class="code" v-html="jsonToHTML(item.raw)"></span>
         </v-tooltip>
-        <span v-if="item['ItemID']" class="attribute text-success">PID:{{ item['ItemID'] }}</span>
-        <span v-if="item['Quantity']" class="attribute text-warning">Qt:{{ item['Quantity'] }}</span>
-        <span v-if="item['Price']" class="attribute text-grey-darken-2">{{ item['Price'] }}</span>
-        <span v-if="item['DeliveryType']" class="attribute text-grey-darken-2">{{ item['DeliveryType'] }}</span>
-        <span v-if="item['Description']" class="attribute text-grey-darken-2">{{ item['Description'] }}</span>
-        <span v-if="item['TenderID']" class="attribute text-grey-darken-2">{{ item['TenderID'] }}</span>
-        <span v-if="item['Amount']" class="attribute text-grey-darken-2">Amount: {{ item['Amount'] }}</span>
-        <span v-if="item['FirstName']" class="attribute text-grey-darken-2">{{ item['FirstName'] }}</span>
-        <span v-if="item['LastName']" class="attribute text-grey-darken-2">{{ item['LastName'] }}</span>
-        <span v-if="item['Email']" class="attribute text-grey-darken-2">{{ item['Email'] }}</span>
+        <span v-for="(tag, index) in item.extraInfo" class="attribute" :key="index" :style="`color: ${tag.color || 'inherit'}`">
+          {{ `${tag.name}:${tag.value}`.replace(/^:/, '') }}
+        </span>
       </div>
     </div>
     <div class="flex-0 mt-3">

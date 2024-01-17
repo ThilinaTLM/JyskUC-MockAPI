@@ -37,7 +37,7 @@ const dialogBoxRef = ref<any>(null)
 const pagination = reactive({
   page: 1,
   totalPages: 1,
-  itemsPerPage: 12,
+  itemsPerPage: 24,
 })
 
 const pagedInstSets = computed(() => {
