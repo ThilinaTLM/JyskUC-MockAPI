@@ -47,7 +47,9 @@ export default defineNuxtConfig({
     },
     routeRules: {
       '/api/enactor/v2/orders/importOrder/**': { proxy: '/api/enactor/order/import/**' },
-      '/apis/enactor/v2/orders/importOrder/**': { proxy: '/api/enactor/order/import/**' }
+      '/apis/enactor/v2/orders/importOrder/**': { proxy: '/api/enactor/order/import/**' },
+      '/rest/enactor/orders/importOrder/**': { proxy: '/api/enactor/order/import/**' },
+      '/rest/enactor/orders/importOrder': { proxy: '/api/enactor/order/import' },
     }
   }
 })
