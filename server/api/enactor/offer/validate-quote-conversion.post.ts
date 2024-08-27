@@ -4,11 +4,15 @@ const validators = [
     "Dilusha Jeewanthi"
 ]
 
-export default defineEventHandler(async (event ) => {
+export default defineEventHandler(async (event) => {
     setResponseStatus(event, 200)
     const randomValidator = validators[Math.floor(Math.random() * validators.length)]
     return {
         "validConversion": true,
-        "message": `Your order has been validated by ${randomValidator}`
+        "message": {
+            "severity": "INFO",
+            "messageText": `Your order has been validated by ${randomValidator}`,
+            "additionalData": {}
+        }
     }
 })

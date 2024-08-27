@@ -49,9 +49,9 @@ export default defineNuxtConfig({
       '/api/enactor/v2/orders/importOrder/**': { proxy: '/api/enactor/order/import/**' },
       '/apis/enactor/v2/orders/importOrder/**': { proxy: '/api/enactor/order/import/**' },
       '/apis/enactor/v2/offer/validateQuoteConversion': { proxy: '/api/enactor/offer/validate-quote-conversion' },
+      '/apis/enactor/v2/offer/shareOffer': { proxy: '/api/enactor/offer/share-offer' },
       '/rest/enactor/orders/importOrder/**': { proxy: '/api/enactor/order/import/**' },
       '/rest/enactor/orders/importOrder': { proxy: '/api/enactor/order/import' },
-
     }
   }
 })
