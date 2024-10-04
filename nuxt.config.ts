@@ -52,6 +52,8 @@ export default defineNuxtConfig({
       '/apis/enactor/v2/offer/shareOffer': { proxy: '/api/enactor/offer/share-offer' },
       '/rest/enactor/orders/importOrder/**': { proxy: '/api/enactor/order/import/**' },
       '/rest/enactor/orders/importOrder': { proxy: '/api/enactor/order/import' },
+      '/apis/enactor/v2/orders/completeTransaction': { proxy: '/api/enactor/order/complete' },
+      '/apis/enactor/v2/orders/completeTransaction/**': { proxy: '/api/enactor/order/complete' },
     }
   }
 })
