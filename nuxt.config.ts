@@ -54,6 +54,8 @@ export default defineNuxtConfig({
       '/rest/enactor/orders/importOrder': { proxy: '/api/enactor/order/import' },
       '/apis/enactor/v2/orders/completeTransaction': { proxy: '/api/enactor/order/complete' },
       '/apis/enactor/v2/orders/completeTransaction/**': { proxy: '/api/enactor/order/complete' },
+      '/apis/enactor/v2/orders/completeOrder': { proxy: '/api/enactor/order/complete' },
+      '/apis/enactor/v2/orders/completeOrder/**': { proxy: '/api/enactor/order/complete' },
     }
   }
 })
